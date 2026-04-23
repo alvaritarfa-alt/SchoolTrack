@@ -3,6 +3,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Pages
 import Login from './pages/Login';
+import Register from './pages/Register';
 import ParentAccess from './pages/ParentAccess';
 import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
@@ -15,81 +16,67 @@ import Analytics from './pages/Analytics';
 import Profile from './pages/Profile';
 import Unauthorised from './pages/Unauthorised';
 
+const adminRoles = ['super_admin', 'admin'];
+const teacherRoles = ['form_teacher', 'subject_teacher'];
+const allAuthenticatedRoles = ['super_admin', 'admin', 'form_teacher', 'subject_teacher', 'parent'];
+
 const router = createBrowserRouter([
-  // Public routes
   {
     path: '/login',
     element: <Login />,
   },
   {
+    path: '/register',
+    element: <Register />,
+  },
+  {
     path: '/parent-access',
     element: <ParentAccess />,
   },
-  
-  // Admin routes
-  {
-    element: <ProtectedRoute allowedRoles={['super_admin', 'admin']} />,
-    children: [
-      {
-        path: '/dashboard',
-        element: <Dashboard />,
-      },
-      {
-        path: '/students',
-        element: <Students />,
-      },
-      {
-        path: '/classes',
-        element: <Classes />,
-      },
-      {
-        path: '/staff',
-        element: <Staff />,
-      },
-      {
-        path: '/settings',
-        element: <Settings />,
-      },
-      {
-        path: '/analytics',
-        element: <Analytics />,
-      },
-    ],
-  },
-
-  // Teacher routes
-  {
-    element: <ProtectedRoute allowedRoles={['form_teacher', 'subject_teacher']} />,
-    children: [
-      {
-        path: '/my-classes',
-        element: <MyClasses />,
-      },
-      {
-        path: '/enter-results',
-        element: <EnterResults />,
-      },
-    ],
-  },
-
-  // Shared authenticated routes
-  {
-    element: <ProtectedRoute allowedRoles={['super_admin', 'admin', 'form_teacher', 'subject_teacher', 'parent']} />,
-    children: [
-      {
-        path: '/profile',
-        element: <Profile />,
-      },
-    ],
-  },
-
-  // Unauthorised page
   {
     path: '/unauthorised',
     element: <Unauthorised />,
   },
-
-  // Catch-all redirect
+  {
+    path: '/dashboard',
+    element: <ProtectedRoute allowedRoles={adminRoles}><Dashboard /></ProtectedRoute>,
+  },
+  {
+    path: '/students',
+    element: <ProtectedRoute allowedRoles={adminRoles}><Students /></ProtectedRoute>,
+  },
+  {
+    path: '/classes',
+    element: <ProtectedRoute allowedRoles={adminRoles}><Classes /></ProtectedRoute>,
+  },
+  {
+    path: '/staff',
+    element: <ProtectedRoute allowedRoles={adminRoles}><Staff /></ProtectedRoute>,
+  },
+  {
+    path: '/settings',
+    element: <ProtectedRoute allowedRoles={adminRoles}><Settings /></ProtectedRoute>,
+  },
+  {
+    path: '/analytics',
+    element: <ProtectedRoute allowedRoles={adminRoles}><Analytics /></ProtectedRoute>,
+  },
+  {
+    path: '/my-classes',
+    element: <ProtectedRoute allowedRoles={teacherRoles}><MyClasses /></ProtectedRoute>,
+  },
+  {
+    path: '/enter-results',
+    element: <ProtectedRoute allowedRoles={teacherRoles}><EnterResults /></ProtectedRoute>,
+  },
+  {
+    path: '/profile',
+    element: <ProtectedRoute allowedRoles={allAuthenticatedRoles}><Profile /></ProtectedRoute>,
+  },
+  {
+    path: '/',
+    element: <Login />,
+  },
   {
     path: '*',
     element: <Login />,
